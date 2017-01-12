@@ -4,13 +4,18 @@
 			v-card
 				v-card-text
 					v-card-row(height="75px")
-						v-text-input(id="email-input", name="email-input", label="Email" v-model="user.email")
+						v-text-input(id="email-input" name="email-input" label="Email"
+							v-model="user.email"
+							v-bind:disabled="loading")
 					v-card-row(height="75px")
-						v-text-input(id="pwd-input", name="pwd-input", label="Password" type="password" v-model="user.password")
+						v-text-input(id="pwd-input" name="pwd-input" label="Password" type="password"
+							v-model="user.password"
+							v-bind:disabled="loading")
 				v-card-row
-					v-container(fluid)
-						v-progress-circular(class="black--text" indeterminate v-if="loading")
-						v-btn(flat block class="darken-1" type="submit" @click.native.prevent="setUser" v-if="!loading" v-bind:disabled="!validForm") Login
+					v-btn(flat block class="darken-1" type="submit"
+						@click.native.prevent="setUser"
+						v-bind:loading="loading"
+						v-bind:disabled="!validForm") Login
 
 
 </template>
@@ -34,7 +39,7 @@
 
 		computed: {
 			hasUser () {
-				return this.$store.state.user.id && this.$store.state.user.id !== ""
+				return !!this.$store.getters.currentUser.id
 			},
 			validForm () {
 				return this.user.email !== "" && this.user.password !== ""
@@ -43,6 +48,19 @@
 
 		mounted () {
 			this.$emit('view', this.meta())
+
+			let that = this
+			let userId = this.$cookie.get('userId')
+
+			if (userId) {
+				this.loading = true;
+				this.axios.get(`${api.base}/users/${userId}`).then((response) => {
+					let user = response.data.response[0]
+					that.$store.commit('CHANGE_USER', user);
+					that.$router.push('getstarted')
+					that.loading = false;
+				})
+			}
 		},
 
 		preFetch () {
@@ -66,9 +84,11 @@
 							username: that.user.email
 						}
 					}).then(function(response){
-						let pwdHash = response.data.response[0].password
+						let user = response.data.response[0]
+						let pwdHash = user.password
 						if (bcrypt.compareSync(that.user.password, pwdHash)) {
-							that.$store.commit('CHANGE_USER', response.data.response[0]);
+							that.$store.commit('CHANGE_USER', user);
+							that.$cookie.set('userId', user.id, { expires: 7, domain: 'localhost' })
 							that.$router.push('getstarted')
 						}
 						else {
@@ -97,21 +117,10 @@
 	}
 </script>
 
-<style lang="stylus">
-
-	.cards
-		flex-flow: row wrap
-		justify-content: space-between
-
-	.container
-		display: flex
-		height: 100%
-		justify-content: center
-		align-items: center
+<style lang="stylus" scoped>
 
 	.card
-		margin-left: auto
-		margin-right: auto
+		margin: auto
 		width: 500px
 		height: 500px
 		flex-basis: 500px

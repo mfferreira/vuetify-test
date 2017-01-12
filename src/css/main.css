@@ -6,10 +6,10 @@
   margin: 4rem 0;
 }
 
-.card {
+/*.card {
   margin-top: -1rem;
   margin-bottom: 5rem;
-}
+}*/
 
 a {
   color: inherit;
@@ -25,4 +25,8 @@ main {
 
 h2 {
   text-align: center;
+}
+
+#modals .btn {
+	margin: 1rem;
 }

@@ -6,12 +6,14 @@ import router from './router/index'
 import { sync } from 'vuex-router-sync'
 import axios from 'axios'
 import VueAxios from 'vue-axios'
+import VueCookie from 'vue-cookie'
 
 
 sync(store, router)
 
 Vue.use(Vuetify)
 Vue.use(VueAxios, axios)
+Vue.use(VueCookie)
 
 const app = new Vue(Vue.util.extend({
   router,

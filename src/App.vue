@@ -1,79 +1,98 @@
-	<template>
-		<v-app top-navbar footer left-sidebar>
+<script>
+	export default {
 
-			<header>
-				<v-navbar>
-					<v-navbar-side-icon class="hidden-sm-and-up"></v-navbar-side-icon>
-					<v-navbar-logo>AltMan</v-navbar-logo>
-					<v-navbar-items>
-						<v-navbar-item v-dropdown:dropdown
-							:item="{ href: '#!', text: 'Menu', icon: false }"
-						></v-navbar-item>
-					</v-navbar-items>
-					<v-dropdown v-bind:items="navMenu" id="dropdown" right></v-dropdown>
-
-				</v-navbar>
-			</header>
-
-			<main>
-				<v-sidebar id='sidebar'  left v-if="hasUser">
-					<v-sidebar-items :items="sideMenu"></v-sidebar-items>
-				</v-sidebar>
-
-				<v-content>
-					<v-container fluid>
-						<router-view></router-view>
-					</v-container>
-				</v-content>
-			</main>
-
-			<v-footer></v-footer>
-
-		</v-app>
-	</template>
-
-	<script>
-		export default {
-
-			computed: {
-				hasUser () {
-					return this.$store.state.user.id && this.$store.state.user.id !== ""
-				}
-			},
-
-			data () {
-				return {
-					navMenu: [
-						{ text: 'Link', href: '#!' },
-						{ text: 'Link', href: '#!' },
-						{ text: 'Link', href: '#!' },
-						{ text: 'Link', href: '#!' }
-					],
-					sideMenu: [
-						{ text: 'Settings', href: '/settings', icon: 'settings' },
-						{ text: 'Clients', href: '/clients', icon: 'business' },
-						{ text: 'Members', href: '/members', icon: 'face' },
-						{ text: 'Touchpoints', href: '/touchpoints', icon: 'place' },
-						{ text: 'Sensors', href: '/sensors', icon: 'bluetooth' },
-						{ text: 'Integrations', href: '/integrations', icon: 'memory' },
-						{ text: 'User Extensions', href: '/userextensions', icon: 'note_add' },
-						{ text: 'Interfaces', href: '/interfaces', icon: 'code' },
-						{ text: 'Scheduled Visits', href: '/scheduledvisits', icon: 'event' },
-						{ text: 'Buildings', href: '/buildings', icon: 'location_city' },
-						{ text: 'App Access', href: '/appaccess', icon: 'screen_lock_portrait' },
-						{ text: 'Roles', href: '/roles', icon: 'blur_circular' },
-						{ text: 'Devices', href: '/devices', icon: 'phone_iphone' },
-						{ text: 'Types', href: '/types', icon: 'format_list_bulleted' },
-						{ text: 'Purposes', href: '/purposes', icon: 'format_list_bulleted' },
-						{ text: 'Invites', href: '/invites', icon: 'email' },
-						{ text: 'Triggers', href: '/triggers', icon: 'call_split' },
-						{ text: 'Users', href: '/users', icon: 'lock' }
-					]
-				}
-			},
-
-			mounted () {
-				this.$vuetify.init()
+		computed: {
+			hasUser () {
+				return this.$store.state.user.id && this.$store.state.user.id !== ""
 			}
+		},
+
+		data () {
+			return {
+				navMenu: [
+					{ text: 'Link', href: '#!' },
+					{ text: 'Link', href: '#!' },
+					{ text: 'Link', href: '#!' },
+					{ text: 'Link', href: '#!' }
+				],
+				sideMenu: [
+					{ text: 'Settings', href: '/settings', icon: 'settings', router: true },
+					{ text: 'Clients', href: '/clients', icon: 'business', router: true },
+					{ text: 'Members', href: '/members', icon: 'face', router: true },
+					{ text: 'Touchpoints', href: '/touchpoints', icon: 'place', router: true },
+					{ text: 'Sensors', href: '/sensors', icon: 'bluetooth', router: true },
+					{ text: 'Integrations', href: '/integrations', icon: 'memory', router: true },
+					{ text: 'User Extensions', href: '/userextensions', icon: 'note_add', router: true },
+					{ text: 'Interfaces', href: '/interfaces', icon: 'code', router: true },
+					{ text: 'Scheduled Visits', href: '/scheduledvisits', icon: 'event', router: true },
+					{ text: 'Buildings', href: '/buildings', icon: 'location_city', router: true },
+					{ text: 'App Access', href: '/appaccess', icon: 'screen_lock_portrait', router: true },
+					{ text: 'Roles', href: '/roles', icon: 'blur_circular', router: true },
+					{ text: 'Devices', href: '/devices', icon: 'phone_iphone', router: true },
+					{ text: 'Types', href: '/types', icon: 'format_list_bulleted', router: true },
+					{ text: 'Purposes', href: '/purposes', icon: 'format_list_bulleted', router: true },
+					{ text: 'Invites', href: '/invites', icon: 'email', router: true },
+					{ text: 'Triggers', href: '/triggers', icon: 'call_split', router: true },
+					{ text: 'Users', href: '/users', icon: 'lock', router: true }
+				]
+			}
+		},
+
+		mounted () {
+			this.$vuetify.init()
 		}
-	</script>
+	}
+</script>
+
+<template lang="pug">
+	v-app(top-navbar footer left-sidebar)
+
+		header
+			v-navbar
+				v-navbar-side-icon( class="hidden-sm-and-up" )
+				v-navbar-logo AltMan
+				v-navbar-items
+					v-navbar-item( v-bind:item="{ href: '/logout', text: 'Logout', icon: false, router: true }" )
+				v-dropdown( v-bind:items="navMenu" id="dropdown" right )
+
+		main
+			v-sidebar( id='sidebar' left v-if="hasUser" )
+				v-sidebar-items( :items="sideMenu" )
+
+			v-content
+				v-container( fluid )
+					router-view
+
+		v-footer
+
+</template>
+
+<style lang="stylus">
+
+	@import '../node_modules/vuetify/src/stylus/settings/_colors'
+
+	#resource-container
+		height: 100%
+		width: 100%
+
+	#delete
+		cursor: pointer
+		color: $red.lighten-1
+
+	h2
+		text-align: left
+
+	.container
+		display: flex
+		height: 100%
+		justify-content: center
+		align-items: center
+
+	main
+		text-align: left
+
+	.card
+		.btn
+			margin: 1rem
+
+</style>
